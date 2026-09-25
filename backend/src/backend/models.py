@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import CheckConstraint, DateTime, ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.database import Base
 
@@ -19,9 +19,11 @@ class Track(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
-    artist_id: Mapped[int] = mapped_column(ForeignKey("artist.id"))
+    artist_id: Mapped[int] = mapped_column(ForeignKey("artist.id", ondelete="CASCADE"))
     seconds: Mapped[int]
     liked: Mapped[bool] = mapped_column(default=False)
+
+    artist: Mapped[Artist] = relationship()
 
 
 class Playlist(Base):
@@ -33,12 +35,20 @@ class Playlist(Base):
         DateTime(timezone=True), server_default=func.now()
     )
 
+    tracks: Mapped[list[PlaylistTrack]] = relationship(
+        order_by="PlaylistTrack.position",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
 
 class PlaylistTrack(Base):
     __tablename__ = "playlist_track"
 
     playlist_id: Mapped[int] = mapped_column(
-        ForeignKey("playlist.id"), primary_key=True
+        ForeignKey("playlist.id", ondelete="CASCADE"), primary_key=True
     )
-    track_id: Mapped[int] = mapped_column(ForeignKey("track.id"))
+    track_id: Mapped[int] = mapped_column(ForeignKey("track.id", ondelete="CASCADE"))
     position: Mapped[int] = mapped_column(primary_key=True)
+
+    track: Mapped[Track] = relationship()
