@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, func
+from sqlalchemy import CheckConstraint, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.database import Base
@@ -15,6 +15,7 @@ class Artist(Base):
 
 class Track(Base):
     __tablename__ = "track"
+    __table_args__ = (CheckConstraint("seconds > 0", name="seconds_positive"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
