@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from backend.database import get_session
 from backend.errors import ArtistNotFoundError, TrackNotFoundError
+from backend.schemas.common import DbInt
 from backend.schemas.tracks import TrackCreate, TrackRead, TrackUpdate
 from backend.services import tracks as track_service
 
@@ -27,7 +28,7 @@ def create_track(data: TrackCreate, session: Annotated[Session, Depends(get_sess
 
 
 @router.get("/{track_id}", response_model=TrackRead, status_code=200)
-def get_track(track_id: int, session: Annotated[Session, Depends(get_session)]):
+def get_track(track_id: DbInt, session: Annotated[Session, Depends(get_session)]):
     try:
         return track_service.get_track(session, track_id)
     except TrackNotFoundError:
@@ -36,7 +37,7 @@ def get_track(track_id: int, session: Annotated[Session, Depends(get_session)]):
 
 @router.put("/{track_id}", response_model=TrackRead, status_code=200)
 def update_track(
-    track_id: int,
+    track_id: DbInt,
     data: TrackUpdate,
     session: Annotated[Session, Depends(get_session)],
 ):
@@ -51,7 +52,7 @@ def update_track(
 
 
 @router.delete("/{track_id}", status_code=204)
-def delete_track(track_id: int, session: Annotated[Session, Depends(get_session)]):
+def delete_track(track_id: DbInt, session: Annotated[Session, Depends(get_session)]):
     try:
         track_service.delete_track(session, track_id)
     except TrackNotFoundError:
@@ -59,7 +60,7 @@ def delete_track(track_id: int, session: Annotated[Session, Depends(get_session)
 
 
 @router.put("/{track_id}/like", status_code=204)
-def like_track(track_id: int, session: Annotated[Session, Depends(get_session)]):
+def like_track(track_id: DbInt, session: Annotated[Session, Depends(get_session)]):
     try:
         track_service.like_track(session, track_id)
     except TrackNotFoundError:
@@ -67,7 +68,7 @@ def like_track(track_id: int, session: Annotated[Session, Depends(get_session)])
 
 
 @router.delete("/{track_id}/like", status_code=204)
-def unlike_track(track_id: int, session: Annotated[Session, Depends(get_session)]):
+def unlike_track(track_id: DbInt, session: Annotated[Session, Depends(get_session)]):
     try:
         track_service.unlike_track(session, track_id)
     except TrackNotFoundError:

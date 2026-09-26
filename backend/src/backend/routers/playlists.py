@@ -9,6 +9,7 @@ from backend.errors import (
     PlaylistTrackNotFoundError,
     TrackNotFoundError,
 )
+from backend.schemas.common import DbInt
 from backend.schemas.playlists import (
     PlaylistCreate,
     PlaylistDetail,
@@ -36,7 +37,7 @@ def create_playlist(
 
 @router.delete("/{playlist_id}", status_code=204)
 def delete_playlist(
-    playlist_id: int, session: Annotated[Session, Depends(get_session)]
+    playlist_id: DbInt, session: Annotated[Session, Depends(get_session)]
 ):
     try:
         playlist_service.delete_playlist(session, playlist_id)
@@ -45,7 +46,7 @@ def delete_playlist(
 
 
 @router.get("/{playlist_id}", response_model=PlaylistDetail, status_code=200)
-def get_playlist(playlist_id: int, session: Annotated[Session, Depends(get_session)]):
+def get_playlist(playlist_id: DbInt, session: Annotated[Session, Depends(get_session)]):
     try:
         return playlist_service.get_playlist(session, playlist_id)
     except PlaylistNotFoundError:
@@ -54,7 +55,7 @@ def get_playlist(playlist_id: int, session: Annotated[Session, Depends(get_sessi
 
 @router.put("/{playlist_id}", response_model=PlaylistRead, status_code=200)
 def update_playlist(
-    playlist_id: int,
+    playlist_id: DbInt,
     data: PlaylistUpdate,
     session: Annotated[Session, Depends(get_session)],
 ):
@@ -66,7 +67,7 @@ def update_playlist(
 
 @router.post("/{playlist_id}/tracks", response_model=PlaylistTrackRead, status_code=201)
 def add_track(
-    playlist_id: int,
+    playlist_id: DbInt,
     data: PlaylistTrackCreate,
     session: Annotated[Session, Depends(get_session)],
 ):
@@ -80,8 +81,8 @@ def add_track(
 
 @router.delete("/{playlist_id}/tracks/{position}", status_code=204)
 def remove_track(
-    playlist_id: int,
-    position: int,
+    playlist_id: DbInt,
+    position: DbInt,
     session: Annotated[Session, Depends(get_session)],
 ):
     try:

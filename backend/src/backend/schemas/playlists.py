@@ -2,6 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from backend.schemas.common import DbInt
 from backend.schemas.tracks import TrackRead
 
 
@@ -42,4 +43,4 @@ class PlaylistUpdate(BaseModel):
 
 
 class PlaylistTrackCreate(BaseModel):
-    track_id: int
+    track_id: DbInt
