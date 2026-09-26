@@ -12,6 +12,13 @@ class Artist(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
 
+    tracks: Mapped[list[Track]] = relationship(
+        back_populates="artist",
+        order_by="Track.title",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
 
 class Track(Base):
     __tablename__ = "track"
@@ -23,7 +30,7 @@ class Track(Base):
     seconds: Mapped[int]
     liked: Mapped[bool] = mapped_column(default=False)
 
-    artist: Mapped[Artist] = relationship()
+    artist: Mapped[Artist] = relationship(back_populates="tracks")
 
 
 class Playlist(Base):
