@@ -1,7 +1,11 @@
 import { PlaylistCard } from "../components/PlaylistCard.tsx"
-import { playlists } from "../data.ts"
+import type { StoredPlaylist } from "../types.ts"
 
-export function PlaylistsPage() {
+type PlaylistsPageProps = {
+    playlists: StoredPlaylist[]
+}
+
+export function PlaylistsPage({ playlists }: PlaylistsPageProps) {
     return (
         <>
             <h1 className="text-3xl font-bold">Playlists</h1>

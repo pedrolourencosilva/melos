@@ -1,4 +1,4 @@
-import type { Artist, PlaylistDetail, Track } from "./types"
+import type { Artist, StoredPlaylist, Track } from "./types"
 
 const radiohead: Artist = { id: 1, name: "Radiohead" }
 
@@ -10,16 +10,16 @@ export const tracks: Track[] = [
     { id: 5, title: "Bodysnatchers", artist: radiohead, seconds: 242, liked: false }
 ]
 
-export const playlists: PlaylistDetail[] = [
+export const playlists: StoredPlaylist[] = [
     {
         id: 3,
         name: "Late Night",
         created_at: "2026-09-27T21:30:00Z",
         tracks: [
-            { position: 1, track: tracks[2] },
-            { position: 3, track: tracks[0] },
-            { position: 4, track: tracks[3] },
-            { position: 6, track: tracks[2] },
+            { position: 1, trackId: 3 },
+            { position: 3, trackId: 1 },
+            { position: 4, trackId: 4 },
+            { position: 6, trackId: 3 },
         ],
     },
     {
@@ -27,8 +27,8 @@ export const playlists: PlaylistDetail[] = [
         name: "OK Computer",
         created_at: "2026-09-25T18:00:00Z",
         tracks: [
-            { position: 1, track: tracks[1] },
-            { position: 2, track: tracks[2] },
+            { position: 1, trackId: 2 },
+            { position: 2, trackId: 3 },
         ],
     },
     {

@@ -28,3 +28,15 @@ export type PlaylistDetail = {
     created_at: string
     tracks: PlaylistTrack[]
 }
+
+export type PlaylistEntry = {
+    position: number
+    trackId: number
+}
+
+export type StoredPlaylist = {
+    id: number
+    name: string
+    created_at: string
+    tracks: PlaylistEntry[]
+}
