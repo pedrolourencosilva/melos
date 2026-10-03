@@ -6,13 +6,14 @@ import { NotFoundPage } from "./pages/NotFoundPage.tsx"
 import { NavBar } from './components/NavBar.tsx'
 import { Route, Routes } from "react-router"
 import { useState } from "react"
+import * as trackLogic from "./logic/tracks.ts"
 import { tracks as initialTracks, playlists as initialPlaylists } from "./data.ts"
 
 function App() {
     const [tracks, setTracks] = useState(initialTracks)
     const [playlists, setPlaylists] = useState(initialPlaylists)
     function toggleLike(trackId: number) {
-        setTracks(tracks.map((t) => t.id === trackId ? { ...t, liked: !t.liked } : t))
+        setTracks(trackLogic.toggleLike(tracks, trackId))
     }
     return (
         <main className="max-w-3xl mx-auto">

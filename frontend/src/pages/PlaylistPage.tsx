@@ -1,6 +1,7 @@
 import { useParams } from "react-router"
 import type { StoredPlaylist, Track } from "../types.ts"
 import { TrackRow } from "../components/TrackRow"
+import * as trackLogic from "../logic/tracks.ts"
 
 type PlaylistPageProps = {
     tracks: Track[]
@@ -11,11 +12,6 @@ type PlaylistPageProps = {
 export function PlaylistPage({ tracks, playlists, toggleLike }: PlaylistPageProps) {
     const { playlistId } = useParams()
     const playlist = playlists.find((p) => p.id === Number(playlistId))
-    function getTrack(trackId: number): Track {
-        const track: Track | undefined = tracks.find((t) => t.id === trackId)
-        if (track === undefined) throw new Error(`Track ${trackId} not found`)
-        return track
-    }
     if (playlist === undefined) {
         return <p>Playlist not found</p>
     }
@@ -26,7 +22,7 @@ export function PlaylistPage({ tracks, playlists, toggleLike }: PlaylistPageProp
             {empty ? <p>No tracks yet</p> :
                 <ul>
                     {playlist.tracks.map((p, i) =>
-                        <TrackRow key={p.position} number={i + 1} track={getTrack(p.trackId)} onLike={toggleLike} />
+                        <TrackRow key={p.position} number={i + 1} track={trackLogic.getTrack(tracks, p.trackId)} onLike={toggleLike} />
                     )}
                 </ul>
             }
