@@ -1,31 +1,30 @@
 import { useParams } from "react-router"
 import type { StoredPlaylist, Track } from "../types.ts"
-import { TrackRow } from "../components/TrackRow"
-import * as trackLogic from "../logic/tracks.ts"
+import { PlaylistTitle } from "../components/playlist/PlaylistTitle.tsx"
+import { PlaylistTracks } from "../components/playlist/PlaylistTracks.tsx"
+import { AddTracks } from "../components/playlist/AddTracks.tsx"
+import { DeletePlaylistButton } from "../components/playlist/DeletePlaylistButton.tsx"
 
 type PlaylistPageProps = {
     tracks: Track[]
     playlists: StoredPlaylist[]
-    toggleLike: (trackId: number) => void
+    onLikeTrack: (trackId: number) => void
+    onAddTrack: (playlistId: number, trackId: number) => void
+    onRenamePlaylist: (playlistId: number, name: string) => void
+    onDeletePlaylist: (playlistId: number) => void
+    onRemoveTrack: (playlistId: number, position: number) => void
 }
 
-export function PlaylistPage({ tracks, playlists, toggleLike }: PlaylistPageProps) {
+export function PlaylistPage({ tracks, playlists, onLikeTrack, onAddTrack, onRenamePlaylist, onDeletePlaylist, onRemoveTrack }: PlaylistPageProps) {
     const { playlistId } = useParams()
     const playlist = playlists.find((p) => p.id === Number(playlistId))
-    if (playlist === undefined) {
-        return <p>Playlist not found</p>
-    }
-    const empty = playlist.tracks.length === 0
+    if (playlist === undefined) return <p>Playlist not found</p>
     return (
         <>
-            <h1 className="text-3xl font-bold">{playlist.name}</h1>
-            {empty ? <p>No tracks yet</p> :
-                <ul>
-                    {playlist.tracks.map((p, i) =>
-                        <TrackRow key={p.position} number={i + 1} track={trackLogic.getTrack(tracks, p.trackId)} onLike={toggleLike} />
-                    )}
-                </ul>
-            }
+            <PlaylistTitle name={playlist.name} onRenamePlaylist={(name) => onRenamePlaylist(playlist.id, name)} />
+            <PlaylistTracks entries={playlist.tracks} tracks={tracks} onLikeTrack={onLikeTrack} onRemoveTrack={(position) => onRemoveTrack(playlist.id, position)} />
+            <AddTracks tracks={tracks} onAddTrack={(trackId) => onAddTrack(playlist.id, trackId)} />
+            <DeletePlaylistButton name={playlist.name} onDeletePlaylist={() => onDeletePlaylist(playlist.id)} />
         </>
     )
 }

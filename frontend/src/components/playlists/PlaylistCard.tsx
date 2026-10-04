@@ -1,5 +1,5 @@
-import { formatDate } from "../format";
-import type { Playlist } from "../types";
+import { formatDate } from "../../format";
+import type { Playlist } from "../../types";
 import { Link } from "react-router"
 
 type PlaylistCardProp = {

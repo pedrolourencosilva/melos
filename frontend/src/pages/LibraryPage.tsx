@@ -1,17 +1,20 @@
-import type { Track } from "../types.ts"
-import { TrackList } from "../components/TrackList.tsx"
+import type { StoredPlaylist, Track } from "../types.ts"
+import { LibraryRow } from "../components/library/LibraryRow.tsx"
 
 type LibraryPageProps = {
     tracks: Track[]
-    toggleLike: (trackId: number) => void
+    playlists: StoredPlaylist[]
+    onLikeTrack: (trackId: number) => void
+    onAddTrack: (playlistId: number, trackId: number) => void
 }
 
-export function LibraryPage({ tracks, toggleLike }: LibraryPageProps) {
+export function LibraryPage({ tracks, playlists, onLikeTrack, onAddTrack }: LibraryPageProps) {
     return (
         <>
             <h1 className="text-3xl font-bold">Library</h1>
-            <TrackList tracks={tracks} toggleLike={toggleLike} />
+            <ul>
+                {tracks.map((t) => <LibraryRow key={t.id} track={t} playlists={playlists} onLikeTrack={onLikeTrack} onAddTrack={onAddTrack} />)}
+            </ul>
         </>
     )
 }
-
