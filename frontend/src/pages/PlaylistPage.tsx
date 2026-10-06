@@ -1,30 +1,25 @@
 import { useParams } from "react-router"
-import type { StoredPlaylist, Track } from "../types.ts"
 import { PlaylistTitle } from "../components/playlist/PlaylistTitle.tsx"
 import { PlaylistTracks } from "../components/playlist/PlaylistTracks.tsx"
 import { AddTracks } from "../components/playlist/AddTracks.tsx"
 import { DeletePlaylistButton } from "../components/playlist/DeletePlaylistButton.tsx"
+import { usePlaylist } from "../hooks/usePlaylist.ts"
+import { useTracks } from "../hooks/useTracks.ts"
 
-type PlaylistPageProps = {
-    tracks: Track[]
-    playlists: StoredPlaylist[]
-    onLikeTrack: (trackId: number) => void
-    onAddTrack: (playlistId: number, trackId: number) => void
-    onRenamePlaylist: (playlistId: number, name: string) => void
-    onDeletePlaylist: (playlistId: number) => void
-    onRemoveTrack: (playlistId: number, position: number) => void
-}
-
-export function PlaylistPage({ tracks, playlists, onLikeTrack, onAddTrack, onRenamePlaylist, onDeletePlaylist, onRemoveTrack }: PlaylistPageProps) {
+export function PlaylistPage() {
     const { playlistId } = useParams()
-    const playlist = playlists.find((p) => p.id === Number(playlistId))
-    if (playlist === undefined) return <p>Playlist not found</p>
+    const { playlist, error: playlistError, renamePlaylist, addTrack, removeTrack, likeTrack, deletePlaylist } = usePlaylist(Number(playlistId))
+    const { tracks, error: trackError } = useTracks()
+    if (trackError !== undefined) return <p>{trackError}</p>
+    if (playlistError !== undefined) return <p>{playlistError}</p>
+    if (tracks === undefined) return <p>Loading...</p>
+    if (playlist === undefined) return <p>Loading...</p>
     return (
         <>
-            <PlaylistTitle name={playlist.name} onRenamePlaylist={(name) => onRenamePlaylist(playlist.id, name)} />
-            <PlaylistTracks entries={playlist.tracks} tracks={tracks} onLikeTrack={onLikeTrack} onRemoveTrack={(position) => onRemoveTrack(playlist.id, position)} />
-            <AddTracks tracks={tracks} onAddTrack={(trackId) => onAddTrack(playlist.id, trackId)} />
-            <DeletePlaylistButton name={playlist.name} onDeletePlaylist={() => onDeletePlaylist(playlist.id)} />
+            <PlaylistTitle name={playlist.name} onRenamePlaylist={renamePlaylist} />
+            <PlaylistTracks entries={playlist.tracks} onLikeTrack={likeTrack} onRemoveTrack={removeTrack} />
+            <AddTracks tracks={tracks} onAddTrack={addTrack} />
+            <DeletePlaylistButton name={playlist.name} onDeletePlaylist={deletePlaylist} />
         </>
     )
 }

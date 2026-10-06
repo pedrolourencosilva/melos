@@ -1,10 +1,10 @@
-import type { StoredPlaylist, Track } from "../../types.ts"
+import type { Playlist, Track } from "../../types.ts"
 import { TrackRow } from "../TrackRow.tsx"
 
 type LibraryRowProps = {
     track: Track
-    playlists: StoredPlaylist[]
-    onLikeTrack: (trackId: number) => void
+    playlists: Playlist[]
+    onLikeTrack: (track: Track) => void
     onAddTrack: (playlistId: number, trackId: number) => void
 }
 

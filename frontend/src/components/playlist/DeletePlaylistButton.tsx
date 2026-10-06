@@ -2,14 +2,14 @@ import { useNavigate } from "react-router"
 
 type DeletePlaylistButtonProps = {
     name: string
-    onDeletePlaylist: () => void
+    onDeletePlaylist: () => Promise<void>
 }
 
 export function DeletePlaylistButton({ name, onDeletePlaylist }: DeletePlaylistButtonProps) {
     const navigate = useNavigate()
-    function handleClick() {
+    async function handleClick() {
         if (!window.confirm(`Delete "${name}"?`)) return
-        onDeletePlaylist()
+        await onDeletePlaylist()
         navigate("/playlists")
     }
     return <button onClick={handleClick}>Delete</button>
