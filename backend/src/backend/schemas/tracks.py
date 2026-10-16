@@ -1,15 +1,11 @@
 from pydantic import BaseModel, ConfigDict, Field
 
 from backend.schemas.artists import ArtistRead
-from backend.schemas.common import INT_MAX, DbInt
+from backend.schemas.common import BIGINT_MAX, INT_MAX, DbInt
 
 
 class TrackCreate(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True)
-
-    title: str = Field(min_length=1)
-    artist_id: DbInt
-    seconds: int = Field(gt=0, le=INT_MAX)
+    deezer_id: int = Field(gt=0, le=BIGINT_MAX)
 
 
 class TrackRead(BaseModel):

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, func
+from sqlalchemy import BigInteger, CheckConstraint, DateTime, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.database import Base
@@ -10,6 +10,7 @@ class Artist(Base):
     __tablename__ = "artist"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    deezer_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     name: Mapped[str]
 
     tracks: Mapped[list[Track]] = relationship(
@@ -25,6 +26,7 @@ class Track(Base):
     __table_args__ = (CheckConstraint("seconds > 0", name="seconds_positive"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    deezer_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     title: Mapped[str]
     artist_id: Mapped[int] = mapped_column(ForeignKey("artist.id", ondelete="CASCADE"))
     seconds: Mapped[int]

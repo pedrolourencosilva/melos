@@ -1,10 +1,15 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 
 from backend.database import get_session
-from backend.errors import ArtistNotFoundError, TrackNotFoundError
+from backend.errors import (
+    ArtistNotFoundError,
+    DeezerTrackNotFoundError,
+    DeezerUnavailableError,
+    TrackNotFoundError,
+)
 from backend.schemas.common import DbInt
 from backend.schemas.tracks import TrackCreate, TrackRead, TrackUpdate
 from backend.services import tracks as track_service
@@ -18,13 +23,20 @@ def list_tracks(session: Annotated[Session, Depends(get_session)]):
 
 
 @router.post("", response_model=TrackRead, status_code=201)
-def create_track(data: TrackCreate, session: Annotated[Session, Depends(get_session)]):
+def create_track(
+    data: TrackCreate,
+    response: Response,
+    session: Annotated[Session, Depends(get_session)],
+):
     try:
-        return track_service.create_track(
-            session, data.title, data.artist_id, data.seconds
-        )
-    except ArtistNotFoundError:
-        raise HTTPException(status_code=422, detail="Artist not found")
+        track, created = track_service.create_track(session, data.deezer_id)
+    except DeezerTrackNotFoundError:
+        raise HTTPException(status_code=422, detail="Deezer track not found")
+    except DeezerUnavailableError:
+        raise HTTPException(status_code=502, detail="Deezer is unavailable")
+    if not created:
+        response.status_code = 200
+    return track
 
 
 @router.get("/{track_id}", response_model=TrackRead, status_code=200)

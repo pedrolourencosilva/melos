@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.routers import artists, playlists, tracks
+from backend.routers import artists, deezer, playlists, tracks
 
 app = FastAPI()
 app.include_router(artists.router)
+app.include_router(deezer.router)
 app.include_router(playlists.router)
 app.include_router(tracks.router)
 

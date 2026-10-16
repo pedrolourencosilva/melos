@@ -12,3 +12,11 @@ class PlaylistNotFoundError(Exception):
 
 class PlaylistTrackNotFoundError(Exception):
     pass
+
+
+class DeezerTrackNotFoundError(Exception):
+    pass
+
+
+class DeezerUnavailableError(Exception):
+    pass

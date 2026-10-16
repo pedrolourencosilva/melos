@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from backend.deezer_api import get_track as deezer_get_track
 from backend.errors import ArtistNotFoundError, TrackNotFoundError
 from backend.models import Artist, Track
 
@@ -9,15 +10,33 @@ def list_tracks(session: Session) -> list[Track]:
     return list(session.scalars(select(Track).order_by(Track.title)).all())
 
 
-def create_track(session: Session, title: str, artist_id: int, seconds: int) -> Track:
-    artist = session.get(Artist, artist_id)
-    if artist is None:
-        raise ArtistNotFoundError()
-    track = Track(title=title, artist_id=artist_id, seconds=seconds)
+def create_track(session: Session, deezer_id: int) -> tuple[Track, bool]:
+    track = session.scalar(select(Track).where(Track.deezer_id == deezer_id))
+    if track is not None:
+        return track, False
+    deezer_track = deezer_get_track(deezer_id)
+    track = Track(
+        deezer_id=deezer_id,
+        title=deezer_track["title"],
+        seconds=deezer_track["seconds"],
+        artist=_get_or_create_artist(session, deezer_track["artist"]),
+    )
     session.add(track)
     session.commit()
     session.refresh(track)
-    return track
+    return track, True
+
+
+def _get_or_create_artist(session: Session, deezer_artist: dict) -> Artist:
+    artist = session.scalar(
+        select(Artist).where(Artist.deezer_id == deezer_artist["deezer_id"])
+    )
+    if artist is None:
+        artist = Artist(
+            deezer_id=deezer_artist["deezer_id"], name=deezer_artist["name"]
+        )
+        session.add(artist)
+    return artist
 
 
 def delete_track(session: Session, track_id: int) -> None:

@@ -1,10 +1,4 @@
-from pydantic import BaseModel, ConfigDict, Field
-
-
-class ArtistCreate(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True)
-
-    name: str = Field(min_length=1)
+from pydantic import BaseModel, ConfigDict
 
 
 class ArtistRead(BaseModel):
@@ -12,12 +6,6 @@ class ArtistRead(BaseModel):
 
     id: int
     name: str
-
-
-class ArtistUpdate(BaseModel):
-    model_config = ConfigDict(str_strip_whitespace=True)
-
-    name: str = Field(min_length=1)
 
 
 class TrackMinimal(BaseModel):
