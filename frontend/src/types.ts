@@ -28,3 +28,15 @@ export type PlaylistDetail = {
     created_at: string
     tracks: PlaylistTrack[]
 }
+
+export type DeezerArtist = {
+    deezer_id: number
+    name: string
+}
+
+export type DeezerTrack = {
+    deezer_id: number
+    title: string
+    seconds: number
+    artist: DeezerArtist
+}

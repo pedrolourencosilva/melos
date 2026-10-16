@@ -2,6 +2,7 @@ import { HomePage } from "./pages/HomePage.tsx"
 import { LibraryPage } from "./pages/LibraryPage.tsx"
 import { PlaylistsPage } from "./pages/PlaylistsPage.tsx"
 import { PlaylistPage } from "./pages/PlaylistPage.tsx"
+import { DiscoverPage } from "./pages/DiscoverPage.tsx"
 import { NotFoundPage } from "./pages/NotFoundPage.tsx"
 import { NavBar } from './components/NavBar.tsx'
 import { Route, Routes } from "react-router"
@@ -15,6 +16,7 @@ function App() {
                 <Route path="/library" element={<LibraryPage />} />
                 <Route path="/playlists" element={<PlaylistsPage />} />
                 <Route path="/playlists/:playlistId" element={<PlaylistPage />} />
+                <Route path="/discover" element={<DiscoverPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </main>
