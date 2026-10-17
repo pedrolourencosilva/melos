@@ -30,5 +30,9 @@ export function useTracks() {
         }
         setVersion(version + 1)
     }
-    return { tracks, error, likeTrack, q, setQ, sort, setSort }
+    async function deleteTrack(trackId: number): Promise<void> {
+        await trackApi.deleteTrack(trackId)
+        setVersion(version + 1)
+    }
+    return { tracks, error, likeTrack, q, setQ, sort, setSort, deleteTrack }
 }
