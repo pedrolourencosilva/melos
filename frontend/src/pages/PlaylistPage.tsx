@@ -9,7 +9,7 @@ import { useTracks } from "../hooks/useTracks.ts"
 export function PlaylistPage() {
     const { playlistId } = useParams()
     const { playlist, error: playlistError, renamePlaylist, addTrack, removeTrack, likeTrack, deletePlaylist } = usePlaylist(Number(playlistId))
-    const { tracks, error: trackError } = useTracks()
+    const { tracks, error: trackError, q, setQ, sort, setSort } = useTracks()
     if (trackError !== undefined) return <p>{trackError}</p>
     if (playlistError !== undefined) return <p>{playlistError}</p>
     if (tracks === undefined) return <p>Loading...</p>
@@ -18,7 +18,7 @@ export function PlaylistPage() {
         <>
             <PlaylistTitle name={playlist.name} onRenamePlaylist={renamePlaylist} />
             <PlaylistTracks entries={playlist.tracks} onLikeTrack={likeTrack} onRemoveTrack={removeTrack} />
-            <AddTracks tracks={tracks} onAddTrack={addTrack} />
+            <AddTracks tracks={tracks} onAddTrack={addTrack} q={q} sort={sort} onSearchTracks={setQ} onSortTracks={setSort} />
             <DeletePlaylistButton name={playlist.name} onDeletePlaylist={deletePlaylist} />
         </>
     )

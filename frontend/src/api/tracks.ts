@@ -1,8 +1,8 @@
-import type { Track } from "../types.ts"
+import type { Track, TrackSort } from "../types.ts"
 import { get, send } from "./http.ts"
 
-export function listTracks(): Promise<Track[]> {
-    return get("/tracks")
+export function listTracks(q: string, sort: TrackSort): Promise<Track[]> {
+    return get(`/tracks?q=${encodeURIComponent(q)}&sort=${sort}`)
 }
 
 export function likeTrack(trackId: number): Promise<void> {

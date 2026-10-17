@@ -1,13 +1,27 @@
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from backend.deezer_api import get_track as deezer_get_track
 from backend.errors import ArtistNotFoundError, TrackNotFoundError
 from backend.models import Artist, Track
 
+ORDER_BY = {
+    "title": [Track.title],
+    "artist": [Artist.name, Track.title],
+    "duration": [Track.seconds, Track.title],
+}
 
-def list_tracks(session: Session) -> list[Track]:
-    return list(session.scalars(select(Track).order_by(Track.title)).all())
+
+def list_tracks(session: Session, q: str, sort: str) -> list[Track]:
+    statement = select(Track).join(Track.artist)
+    q = q.strip()
+    if q:
+        pattern = f"%{q}%"
+        statement = statement.where(
+            or_(Track.title.ilike(pattern), Artist.name.ilike(pattern))
+        )
+    statement = statement.order_by(*ORDER_BY[sort])
+    return list(session.scalars(statement).all())
 
 
 def create_track(session: Session, deezer_id: int) -> tuple[Track, bool]:

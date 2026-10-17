@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
@@ -18,8 +18,12 @@ router = APIRouter(prefix="/api/tracks", tags=["tracks"])
 
 
 @router.get("", response_model=list[TrackRead], status_code=200)
-def list_tracks(session: Annotated[Session, Depends(get_session)]):
-    return track_service.list_tracks(session)
+def list_tracks(
+    session: Annotated[Session, Depends(get_session)],
+    q: str = "",
+    sort: Literal["title", "artist", "duration"] = "title",
+):
+    return track_service.list_tracks(session, q, sort)
 
 
 @router.post("", response_model=TrackRead, status_code=201)

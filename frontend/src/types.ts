@@ -40,3 +40,5 @@ export type DeezerTrack = {
     seconds: number
     artist: DeezerArtist
 }
+
+export type TrackSort = "title" | "artist" | "duration"
